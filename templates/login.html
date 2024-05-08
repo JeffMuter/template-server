@@ -1,0 +1,16 @@
+<!DOCTYPE html >
+<html>
+    <head>
+        <title>{{.PageData.Title}}</title>
+    </head>
+    <body>
+        <section hx-post="/login/">
+            <h1>{{ .PageData.Heading }}</h1>
+            <h4>username:</h4>
+            <input type="text" name="username" required />
+            <h4>password:</h4>
+            <input type="password" name="password" required />
+            <button>sign in</button>
+        </section>
+    </body>
+</html>
