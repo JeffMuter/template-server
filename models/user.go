@@ -1,8 +1,9 @@
 package user
 
 import (
-	"database/sql"
 	"fmt"
+	"log"
+	"template-server/database"
 
 	_ "github.com/lib/pq"
 )
@@ -13,22 +14,36 @@ type User struct {
 	Email string
 }
 
-const (
-	host     = "localhost"
-	port     = 5432
-	user     = "postgres"
-	password = "Everythingx12"
-	dbname   = "trial"
-)
+func GetUsers() []User {
+	query := `SELECT * FROM users`
 
-func main() {
-	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
-		"password=%s dbname=%s sslmode=disable",
-		host, port, user, password, dbname)
-
-	db, err := sql.Open("postgres", psqlInfo)
-	if err != nil {
-		panic(err)
-	}
+	db := database.DatabaseOpen()
 	defer db.Close()
+
+	rows, err := db.Query(query)
+	if err != nil {
+		log.Fatalf("Error executing query: %v", err)
+	}
+	defer rows.Close()
+
+	var users []User
+	for rows.Next() {
+		var user User
+		err := rows.Scan(&user.Id, &user.Name, &user.Email)
+		if err != nil {
+			log.Fatalf("Error scanning row: %v", err)
+		}
+		users = append(users, user)
+	}
+
+	err = rows.Err()
+	if err != nil {
+		log.Fatalf("Error with rows: %v", err)
+	}
+
+	for _, user := range users {
+		fmt.Printf("ID: %d, Name: %s, Email: %s\n", user.Id, user.Name, user.Email)
+	}
+
+	return users
 }
