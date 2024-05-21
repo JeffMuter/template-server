@@ -5,8 +5,8 @@ import (
 	"log"
 	"net/http"
 
+	"template-server/internal/routes"
 	user "template-server/models"
-	"template-server/routes"
 )
 
 func main() {
