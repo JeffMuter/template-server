@@ -3,15 +3,16 @@ package user
 import (
 	"fmt"
 	"log"
-	"template-server/database"
+	"template-server/internal/database"
 
 	_ "github.com/lib/pq"
 )
 
 type User struct {
-	Id    int
-	Name  string
-	Email string
+	Id       int
+	Name     string
+	Email    string
+	Password string
 }
 
 func GetUsers() []User {

@@ -2,7 +2,7 @@ package routes
 
 import (
 	"net/http"
-	"template-server/handlers"
+	"template-server/internal/handlers"
 )
 
 func Router() *http.ServeMux {
