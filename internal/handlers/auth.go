@@ -22,6 +22,11 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	user.Email = r.FormValue("email")
 	user.Password = r.FormValue("password")
 
+	if user.Email == "" || user.Password == "" {
+		http.Error(w, "Email and password are required", http.StatusBadRequest)
+		return
+	}
+
 	// hash
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	if err != nil {
@@ -51,22 +56,22 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 }
 
-func LoginFormHandler(w http.ResponseWriter, r *http.Request) {
-	var user models.User
-	users := models.GetUsers()
+// func LoginFormHandler(w http.ResponseWriter, r *http.Request) {
+// 	var user models.User
+// 	users := models.GetUsers()
 
-	err := r.ParseForm()
-	if err != nil {
-		http.Error(w, "error parsing form", http.StatusBadRequest)
-		return
-	}
+// 	err := r.ParseForm()
+// 	if err != nil {
+// 		http.Error(w, "error parsing form", http.StatusBadRequest)
+// 		return
+// 	}
 
-	user.Email = r.FormValue("email")
-	user.Password = r.FormValue("password")
+// 	user.Email = r.FormValue("email")
+// 	user.Password = r.FormValue("password")
 
-	for _, currentUser := range users {
-		if user.Email == currentUser.Email && user.Password == currentUser.Password {
+// 	// for _, currentUser := range users {
+// 	// 	if user.Email == currentUser.Email && user.Password == currentUser.Password {
 
-		}
-	}
-}
+// 	// 	}
+// 	// }
+// }

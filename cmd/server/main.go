@@ -1,17 +1,15 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
 	"template-server/internal/routes"
-	"template-server/models"
 )
 
 func main() {
 
-	fmt.Printf("All users: %v", models.GetUsers())
+	// fmt.Printf("All users: %v", models.GetUsers())
 	mux := routes.Router()
 
 	log.Printf("Started server on 8080:\nhttp://localhost:8080")
