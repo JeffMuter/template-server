@@ -10,12 +10,12 @@ func Router() *http.ServeMux {
 	mux := http.NewServeMux()
 
 	// Register handlers
-	mux.HandleFunc("/post/", handlers.PostHandler)
-	mux.HandleFunc("GET /login", handlers.ServeLoginForm)
+	mux.HandleFunc("/post/", handlers.ServePostPage)
+	mux.HandleFunc("GET /login", handlers.ServeLoginPage)
 	// mux.HandleFunc("POST /login", handlers.LoginFormHandler)
 
-	mux.HandleFunc("/", handlers.HomeHandler)
-	mux.HandleFunc("GET /registeruser", handlers.ServeRegistrationForm)
+	mux.HandleFunc("/", handlers.ServeHomePage)
+	mux.HandleFunc("GET /registeruser", handlers.ServeRegistrationPage)
 	mux.HandleFunc("POST /registeruser", handlers.RegisterHandler)
 
 	return mux
