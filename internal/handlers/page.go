@@ -78,21 +78,14 @@ func PostHandler(w http.ResponseWriter, r *http.Request) {
 	RenderTemplate(w, postPath, postData, posts)
 }
 
-func LoginHandler(w http.ResponseWriter, r *http.Request) {
+func ServeLoginForm(w http.ResponseWriter, r *http.Request) {
 	var postData Posts
-	pageData := &Page{Title: "File-Serving | Login", Heading: "Login to Admin Account"}
+	pageData := &Page{Title: "Login", Heading: "Login to Admin Account"}
 	RenderTemplate(w, "../../templates/login.html", pageData, postData)
 }
 
-// func UserLoginHandler(w http.ResponseWriter, r *http.Request) {
-// 	//logic to log the user in if valid.
-// 	err := r.ParseForm()
-// 	if err != nil {
-// 		fmt.Println("error parsing form")
-// 		return
-// 	}
-// 	username := r.FormValue("username")
-// 	password := r.FormValue("password")
-
-// 	HomeHandler(w, r) // send the logged in user to the home page.
-// }
+func ServeRegistrationForm(w http.ResponseWriter, r *http.Request) {
+	var postData Posts
+	pageData := &Page{Title: "Register", Heading: "Register"}
+	RenderTemplate(w, "../../templates/login.html", pageData, postData)
+}
