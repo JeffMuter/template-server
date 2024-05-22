@@ -1,4 +1,4 @@
-package user
+package models
 
 import (
 	"fmt"
@@ -10,7 +10,6 @@ import (
 
 type User struct {
 	Id       int
-	Name     string
 	Email    string
 	Password string
 }
@@ -30,7 +29,7 @@ func GetUsers() []User {
 	var users []User
 	for rows.Next() {
 		var user User
-		err := rows.Scan(&user.Id, &user.Name, &user.Email)
+		err := rows.Scan(&user.Id, &user.Email)
 		if err != nil {
 			log.Fatalf("Error scanning row: %v", err)
 		}
@@ -43,7 +42,7 @@ func GetUsers() []User {
 	}
 
 	for _, user := range users {
-		fmt.Printf("ID: %d, Name: %s, Email: %s\n", user.Id, user.Name, user.Email)
+		fmt.Printf("ID: %d, Email: %s\n", user.Id, user.Email)
 	}
 
 	return users

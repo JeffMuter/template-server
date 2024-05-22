@@ -6,12 +6,12 @@ import (
 	"golang.org/x/crypto/bcrypt"
 
 	"template-server/internal/database"
-	user "template-server/models"
+	"template-server/models"
 )
 
 func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 
-	var user user.User
+	var user models.User
 
 	err := r.ParseForm()
 	if err != nil {
@@ -49,4 +49,24 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	// response successful
 	w.WriteHeader(http.StatusCreated)
+}
+
+func LoginFormHandler(w http.ResponseWriter, r *http.Request) {
+	var user models.User
+	users := models.GetUsers()
+
+	err := r.ParseForm()
+	if err != nil {
+		http.Error(w, "error parsing form", http.StatusBadRequest)
+		return
+	}
+
+	user.Email = r.FormValue("email")
+	user.Password = r.FormValue("password")
+
+	for _, currentUser := range users {
+		if user.Email == currentUser.Email && user.Password == currentUser.Password {
+
+		}
+	}
 }
