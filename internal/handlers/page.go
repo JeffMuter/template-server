@@ -92,12 +92,12 @@ func ServePostPage(w http.ResponseWriter, r *http.Request) { // generate a post 
 
 func ServeLoginPage(w http.ResponseWriter, r *http.Request) { // show login form page
 	pageData := Page{Title: "Login", Heading: ""}
-	data := TemplateData{Page: pageData}
+	data := TemplateData{Page: pageData, FormAction: "/login"}
 	RenderTemplate(w, "../../templates/login.html", data)
 }
 
 func ServeRegistrationPage(w http.ResponseWriter, r *http.Request) { // registration form page
 	pageData := Page{Title: "Register", Heading: "Register"}
-	data := TemplateData{Page: pageData}
+	data := TemplateData{Page: pageData, FormAction: "/registeruser"}
 	RenderTemplate(w, "../../templates/login.html", data)
 }

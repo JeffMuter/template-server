@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>{{.PageData.Title}}</title>
+    <title>{{ .Page.Title }}</title>
   </head>
   <body>
-    <form hx-post="/login">
-        <h1>{{ .PageData.Heading }}</h1>
+    <form hx-post="{{ .FormAction }}">
+        <h1>{{ .Page.Title }}</h1>
         <h4>username:</h4>
         <input type="text" name="email" required />
         <h4>password:</h4>
         <input type="password" name="password" required />
-        <button type="submit">{{ .PageData.Title }}</button>
+        <button type="submit">{{ .Page.Title }}</button>
     </form>
   </body>
 </html>
