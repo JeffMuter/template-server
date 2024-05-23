@@ -3,15 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{{.PageData.Title}}</title>
+    <title>{{.Page.Title}}</title>
     <!-- HTMX CDN for later use -->
     <script src="https://cdn.jsdelivr.net/npm/htmx.org@1.8.1/dist/htmx.min.js"></script>
   </head>
   <body>
-    <h1>{{ .PageData.Heading }}</h1>
+    <h1>{{ .Page.Heading }}</h1>
     <div>
       <ul>
-        {{ range .Posts.Posts }}
+        {{ range .Posts }}
         <li><a href="/post/{{ .Title | urlquery }}">{{ .Title }}</a></li>
         {{ end }}
       </ul>

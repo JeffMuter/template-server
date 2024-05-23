@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"database/sql"
+	"fmt"
 	"net/http"
 
 	"golang.org/x/crypto/bcrypt"
@@ -56,22 +58,49 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 }
 
-// func LoginFormHandler(w http.ResponseWriter, r *http.Request) {
-// 	var user models.User
-// 	users := models.GetUsers()
+func LoginFormHandler(w http.ResponseWriter, r *http.Request) {
+	var user models.User
 
-// 	err := r.ParseForm()
-// 	if err != nil {
-// 		http.Error(w, "error parsing form", http.StatusBadRequest)
-// 		return
-// 	}
+	err := r.ParseForm()
+	if err != nil {
+		http.Error(w, "error parsing form", http.StatusBadRequest)
+		return
+	}
 
-// 	user.Email = r.FormValue("email")
-// 	user.Password = r.FormValue("password")
+	user.Email = r.FormValue("email")
+	user.Password = r.FormValue("password")
 
-// 	// for _, currentUser := range users {
-// 	// 	if user.Email == currentUser.Email && user.Password == currentUser.Password {
+	isValidated, err := validateUsernamePassword(user.Email, user.Password)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+	}
+	if isValidated {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+	} else {
+		http.Error(w, "Username or password incorrect... Try again.", http.StatusBadRequest)
+	}
+}
 
-// 	// 	}
-// 	// }
-// }
+func validateUsernamePassword(email string, password string) (bool, error) {
+	// open db connection
+	db := database.DatabaseOpen()
+	defer db.Close()
+
+	var hashedPassword string
+	query := "SELECT password FROM users WHERE email = $1"
+	err := db.QueryRow(query, email).Scan(&hashedPassword)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return false, err
+		}
+		return false, err
+	}
+
+	// compare provided password to the password from the db
+	err = bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
+	if err != nil {
+		return false, fmt.Errorf("invalid password")
+	}
+
+	return true, nil
+}
