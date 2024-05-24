@@ -13,7 +13,6 @@ func Router() *http.ServeMux {
 
 	// Register handlers
 	mux.Handle("/", middleware.AuthMiddleware(http.HandlerFunc(handlers.ServeHomePage)))
-	// mux.HandleFunc("/", handlers.ServeHomePage)
 	mux.HandleFunc("/post/", handlers.ServePostPage)
 
 	mux.HandleFunc("GET /login", handlers.ServeLoginPage)
