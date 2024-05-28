@@ -58,3 +58,36 @@ So, looking back at HandlerFunc. We have a type that has a single field, which i
 ` type HandlerFunc Handler `
 
 This is because, not all Handler types are functions! While I mentioned breifly earlier, since this is not guarunteed, to drastically simplify our code, http.HandlerFunc() has explicitly declared that it only deals with functions! http.HandlerFunc() type even comes with its own http.Server.HTTP() method, so that HandlerFunc() is a Handler() interface type as well!
+
+So let's look at a practical example of HandlerFunc in action!
+
+`
+func Router() *http.ServeMux {
+	mux := http.NewServeMux()
+
+    //example of unprotected route
+	mux.HandleFunc("/post", handlers.ServePostPage)
+
+    // protected route
+	mux.Handle("/", middleware.AuthMiddleware(http.HandlerFunc(handlers.ServeHomePage)))
+
+    return mux
+}
+
+
+func AuthMiddleware(handler http.HandlerFunc) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+        // check if user has valid jwt or cookie
+        // if the jet is invalid, send them to a login page, with failure message
+        // if the user is validated, send them to the handler we would like to!
+    }
+}
+`
+
+This code above has a few steps that aren't important, so we will use commented pseudocode!
+
+The important bits, are to see how the router protects a route, and then how AuthMiddleware works! Let's take a look at that now.
+
+AuthMiddleware takes in a HandlerFunc type as a parameter, and then returns a Handler interface type as a return value. Since we're returning a Handler, we can use AuthMiddleware function as the function value passed into mux.Handle(). The main job of AuthMiddleware is simply to add a layer of authentication, and handle what happens based on success or failure.
+
+Now that we have put
