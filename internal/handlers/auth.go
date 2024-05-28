@@ -147,14 +147,14 @@ func setSession(email string, w http.ResponseWriter) error {
 	return nil
 }
 
-func getSession(r *http.Request) (string, error) {
-	cookie, err := r.Cookie("session_id")
-	if err != nil {
-		return "", err
-	}
-	userName, exists := sessions[cookie.Value]
-	if !exists {
-		return "", http.ErrNoCookie
-	}
-	return userName, nil
-}
+// func getSession(r *http.Request) (string, error) {
+// 	cookie, err := r.Cookie("session_id")
+// 	if err != nil {
+// 		return "", err
+// 	}
+// 	userName, exists := sessions[cookie.Value]
+// 	if !exists {
+// 		return "", http.ErrNoCookie
+// 	}
+// 	return userName, nil
+// }
