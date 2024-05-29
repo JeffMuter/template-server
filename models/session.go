@@ -37,7 +37,6 @@ func SetSession(email string, w http.ResponseWriter) error {
 		return err
 	}
 
-	// add session to db here, then delete session map stuff
 	db := database.DatabaseOpen()
 
 	defer db.Close()
@@ -49,18 +48,15 @@ func SetSession(email string, w http.ResponseWriter) error {
 	}
 	session.UserId = user.Id
 	session.SessionToken = sessionToken
-	session.Created = time.Now()
-	session.Expires = time.Now().Add(time.Hour * 24)
+	session.Created, session.Expires = time.Now(), time.Now().Add(time.Hour*24)
 
 	err = addession(db, session)
 	if err != nil {
 		log.Fatal("addSession() err in SetSession()")
 	}
 
-	// sessions[sessionId] = email
-
 	http.SetCookie(w, &http.Cookie{
-		Name:    "session_id",
+		Name:    "session_token",
 		Value:   sessionToken,
 		Expires: time.Now().Add(24 * time.Hour),
 	})
@@ -73,11 +69,23 @@ func addession(db *sql.DB, session Session) error {
 	return err
 }
 
-func GetSession(r *http.Request) (string, error) {
-	cookie, err := r.Cookie("session_id")
+func ValidateSession(r *http.Request) (string, error) {
+	var session Session
+	db := database.DatabaseOpen()
+	defer db.Close()
+
+	cookie, err := r.Cookie("session_token")
 	if err != nil {
 		return "", err
 	}
+	query := `SELECT email FROM sessions WHERE session_token = ($1)`
+	row := db.QueryRow(query, cookie.Value)
+
+	err = row.Scan(&session.Id, &session.UserId, &session.SessionToken, &session.Created, &session.Expires)
+	if err != nil {
+		log.Fatal("ValidateSession() failed to discover row in row.Scan()")
+	}
+
 	userName, exists := sessions[cookie.Value]
 	if !exists {
 		return "", http.ErrNoCookie

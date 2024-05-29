@@ -56,7 +56,7 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	// response successful
 
-	err = models.setSession(user.Email, w)
+	err = models.SetSession(user.Email, w)
 	if err != nil {
 		http.Error(w, "Failed to set session", http.StatusBadRequest)
 		return
@@ -82,7 +82,7 @@ func LoginFormHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
 	if isValidated {
-		err := setSession(user.Email, w)
+		err := models.SetSession(user.Email, w)
 		if err != nil {
 			http.Error(w, "Failed to set session", http.StatusBadRequest)
 			return
