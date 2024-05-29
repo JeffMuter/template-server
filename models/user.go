@@ -1,6 +1,7 @@
 package models
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 	"template-server/internal/database"
@@ -12,6 +13,28 @@ type User struct {
 	Id       int
 	Email    string
 	Password string
+}
+
+func GetUserByEmail(email string) (User, error) {
+	var user User
+	db := database.DatabaseOpen()
+	defer db.Close()
+
+	query := `SELECT * FROM users WHERE email = $1`
+	row := db.QueryRow(query, email)
+	err := row.Scan(user.Id, user.Email, user.Password)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			fmt.Println("Scanned db for a user via email, found none...")
+			return user, err
+		} else {
+			log.Fatal(err)
+			return user, err
+		}
+	}
+
+	return user, nil
+
 }
 
 func GetUsers() []User {

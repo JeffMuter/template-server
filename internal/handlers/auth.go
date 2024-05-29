@@ -1,20 +1,15 @@
 package handlers
 
 import (
-	"crypto/rand"
 	"database/sql"
-	"encoding/base64"
 	"fmt"
 	"net/http"
-	"time"
 
 	"golang.org/x/crypto/bcrypt"
 
 	"template-server/internal/database"
 	"template-server/models"
 )
-
-var sessions = map[string]string{}
 
 func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 
@@ -61,7 +56,7 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	// response successful
 
-	err = setSession(user.Email, w)
+	err = models.setSession(user.Email, w)
 	if err != nil {
 		http.Error(w, "Failed to set session", http.StatusBadRequest)
 		return
@@ -122,39 +117,3 @@ func validateUsernamePassword(email string, password string) (bool, error) {
 
 	return true, nil
 }
-
-func genSessionId() (string, error) {
-	byteSlice := make([]byte, 32)
-	_, err := rand.Read(byteSlice)
-	if err != nil {
-		return "", err
-	}
-	return base64.URLEncoding.EncodeToString(byteSlice), nil
-}
-
-func setSession(email string, w http.ResponseWriter) error {
-	sessionId, err := genSessionId()
-	if err != nil {
-		return err
-	}
-	sessions[sessionId] = email
-
-	http.SetCookie(w, &http.Cookie{
-		Name:    "session_id",
-		Value:   sessionId,
-		Expires: time.Now().Add(24 * time.Hour),
-	})
-	return nil
-}
-
-// func getSession(r *http.Request) (string, error) {
-// 	cookie, err := r.Cookie("session_id")
-// 	if err != nil {
-// 		return "", err
-// 	}
-// 	userName, exists := sessions[cookie.Value]
-// 	if !exists {
-// 		return "", http.ErrNoCookie
-// 	}
-// 	return userName, nil
-// }
