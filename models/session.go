@@ -50,7 +50,7 @@ func SetSession(email string, w http.ResponseWriter) error {
 	session.SessionToken = sessionToken
 	session.Created, session.Expires = time.Now(), time.Now().Add(time.Hour*24)
 
-	err = addession(db, session)
+	err = addSession(db, session)
 	if err != nil {
 		log.Fatal("addSession() err in SetSession()")
 	}
@@ -63,9 +63,10 @@ func SetSession(email string, w http.ResponseWriter) error {
 	return nil
 }
 
-func addession(db *sql.DB, session Session) error {
+func addSession(db *sql.DB, session Session) error {
 	query := `INSERT INTO sessions(user_id, session_token, created_at, expires_at) VALUES($1, $2, $3, $4)`
 	_, err := db.Exec(query, session.UserId, session.SessionToken, session.Created, session.Expires)
+	fmt.Println(err)
 	return err
 }
 
