@@ -78,7 +78,7 @@ func ValidateSession(r *http.Request) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	query := `SELECT email FROM sessions WHERE session_token = ($1)`
+	query := `SELECT * FROM sessions WHERE session_token = ($1)`
 	row := db.QueryRow(query, cookie.Value)
 
 	err = row.Scan(&session.Id, &session.UserId, &session.SessionToken, &session.Created, &session.Expires)
