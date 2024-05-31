@@ -4,9 +4,8 @@ Scryfall API + OCR to determine the image. Else, a form *shiver*
 
 
 TODO: 
-
-add sessions to the db, not held in local mem.
-
 make the router a little cleaner. adding routes with middleware is messy.
 
 add unit tests
+
+when login, go to home page

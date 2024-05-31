@@ -20,9 +20,9 @@ func GetUserByEmail(email string) (User, error) {
 	db := database.DatabaseOpen()
 	defer db.Close()
 
-	query := `SELECT email, password FROM users WHERE email = $1`
+	query := `SELECT Id, email, password FROM users WHERE email = $1`
 	row := db.QueryRow(query, email)
-	err := row.Scan(&user.Email, &user.Password)
+	err := row.Scan(&user.Id, &user.Email, &user.Password)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			fmt.Println("Scanned db for a user via email, found none...")

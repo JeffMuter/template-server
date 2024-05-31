@@ -38,10 +38,11 @@ func SetSession(email string, w http.ResponseWriter) error {
 	}
 
 	db := database.DatabaseOpen()
-
 	defer db.Close()
+
 	var session Session
 	var user User
+
 	user, err = GetUserByEmail(email)
 	if err != nil {
 		fmt.Println("get user failed in setSession()")
@@ -64,6 +65,7 @@ func SetSession(email string, w http.ResponseWriter) error {
 }
 
 func addSession(db *sql.DB, session Session) error {
+	fmt.Printf("UserId: %v\nToken: %v\nCreated: %v\nExpires: %v\n", session.UserId, session.SessionToken, session.Created, session.Expires)
 	query := `INSERT INTO sessions(user_id, session_token, created_at, expires_at) VALUES($1, $2, $3, $4)`
 	_, err := db.Exec(query, session.UserId, session.SessionToken, session.Created, session.Expires)
 	fmt.Println(err)
