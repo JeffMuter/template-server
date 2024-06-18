@@ -91,7 +91,7 @@ func ServePostPage(w http.ResponseWriter, r *http.Request) { // generate a post 
 }
 
 func ServeLoginPage(w http.ResponseWriter, r *http.Request) { // show login form page
-	pageData := Page{Title: "Login", Heading: ""}
+	pageData := Page{Title: "Login", Heading: "Login"}
 	data := TemplateData{Page: pageData, FormAction: "/login"}
 	RenderTemplate(w, "../../templates/login.html", data)
 }
